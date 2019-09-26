@@ -1,0 +1,4 @@
+(venv) $ pip install -r requirements.txt
+
+
+(venv) $ pip freeze >requirements.txt
