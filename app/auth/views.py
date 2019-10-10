@@ -42,19 +42,51 @@ def logout():
     return redirect(url_for('main.index'))
 
 
-@auth.route('/register', methods=['GET', 'POST'])       # 用户注册路由
+@auth.route('/register', methods=['GET', 'POST'])       # 首页 - User Rights - Register
 @login_required
 def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(email=form.email.data, username=form.username.data, password=form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        token = user.generate_confirmation_token()
-        send_email(user.email, 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
-        flash('A confirmation email has been sent to you by email.')
-        return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', form=form)
+    if request.method == 'POST':
+        email = request.values.get('email')
+        username = request.values.get('username')
+        password = request.values.get('password')
+        password2 = request.values.get('password2')
+        name = request.values.get('name')
+        groupid = request.values.get('groupid')
+        slmsname = request.values.get('slmsname')
+
+        u1 = User.query.filter_by(email=email).all()
+        u2 = User.query.filter_by(username=username).all()
+        if len(u1) > 0:
+            flash('该邮箱已经被注册！')
+        elif len(u2):
+            flash('该用户名已经存在！')
+        elif password != password2:
+            flash('两次输入的密码不匹配！')
+        else:
+            user = User(email=email,
+                        username=username,
+                        password=password,
+                        name=name,
+                        slmsname=slmsname,
+                        groupid=groupid)
+            db.session.add(user)
+            db.session.commit()
+            token = user.generate_confirmation_token()
+            send_email(user.email, 'Confirm Your Account',
+                       'auth/email/confirm', user=user, token=token)
+            flash('A confirmation email has been sent to you by email.')
+            return redirect(url_for('auth.register'))
+    return render_template('auth/register.html')
+    # form = RegistrationForm()
+    # if form.validate_on_submit():
+    #     user = User(email=form.email.data, username=form.username.data, password=form.password.data)
+    #     db.session.add(user)
+    #     db.session.commit()
+    #     token = user.generate_confirmation_token()
+    #     send_email(user.email, 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
+    #     flash('A confirmation email has been sent to you by email.')
+    #     return redirect(url_for('auth.login'))
+    # return render_template('auth/register.html', form=form)
 
 
 @auth.route('/confirm/<token>')     # 确认用户的账户
@@ -98,3 +130,30 @@ def resend_confirmation():
     send_email(current_user.email, 'Confirm Your Account', 'auth/email/confirm', user=current_user, token=token)
     flash('A new confirmation email has been sent to you by email.')
     return redirect(url_for('main.index'))
+
+
+@auth.route('/personal/<username>', methods=['GET', 'POST'])            # 个人主页
+@login_required
+def personal(username):
+
+    return render_template("auth/personal.html")
+
+
+@auth.route('/reset-password/', methods=['GET', 'POST'])                # 首页 - User Rights - Reset Password
+@login_required
+def reset_password():
+    if request.method=='POST':
+        email = request.values.get('email')
+        newpwd = request.values.get('newpwd')
+        newpwd2 = request.values.get('newpwd2')
+        user = User.query.filter_by(email=email).first_or_404()
+
+        if newpwd!=newpwd2:
+            flash("两次输入的新密码不正确")
+        else:
+            user.password=newpwd
+            db.session.add(user)
+            db.session.commit()
+            flash('Password has been updated.')
+            return redirect(url_for('main.index'))
+    return render_template("auth/resetpwd_byadmin.html")

@@ -1,6 +1,7 @@
 import configparser
 import os
 
+
 class ReadConfig:
     def __init__(self):
         configpath = os.path.join(os.getcwd(), 'config.ini')
@@ -10,6 +11,7 @@ class ReadConfig:
     def get_info(self, section, param):
         value = self.cf.get(section, param)
         return value
+
 
 class getGlobalVars:
     def __init__(self):
@@ -30,3 +32,14 @@ class getGlobalVars:
         MAIL_PWD     = self.data.get_info("Email", "MAIL_PWD")
         ADMIN_EMAIL  = self.data.get_info("Email", "MAIL_SEND_USER")
         return MAIL_SERVER, MAIL_PORT, MAIL_ADDRESS, MAIL_PWD, ADMIN_EMAIL
+
+    # def manPowerData(self):
+    #     """
+    #     周报系统连接信息
+    #     :return:
+    #     """
+    #     HOST = self.data.get_info("ManPower", "host")
+    #     USER = self.data.get_info("ManPower", "user")
+    #     PASSWORD = self.data.get_info("ManPower", "password")
+    #     DB = self.data.get_info("ManPower", "db")
+    #     return USER, PASSWORD, HOST, DB

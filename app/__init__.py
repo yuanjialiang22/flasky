@@ -34,7 +34,7 @@ def create_app(config_name):
     from .auth import auth as auth_blueprint             # 注册auth蓝本
     app.register_blueprint(auth_blueprint, url_prefix='/auth')              # auth蓝本增加url前缀/auth
 
-    # from .report import report as report_blueprint
-    # app.register_blueprint(report_blueprint, url_prefix='/report')
+    from .report import report as report_blueprint
+    app.register_blueprint(report_blueprint, url_prefix='/report')
 
     return app

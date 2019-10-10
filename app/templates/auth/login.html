@@ -1,15 +1,92 @@
-{% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>AMMIC - Login</title>
 
-{% block title %}Flasky - Login{% endblock %}
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <!-- popper.min.js 用于弹窗、提示、下拉菜单 -->
+    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='AMMICLOG.BMP') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='AMMICLOG.BMP') }}" type="image/x-icon">
+    <link href="{{ url_for('static', filename='css/style.css') }}" type="text/css" rel="stylesheet">
+</head>
+<body class="single-page contact-page" >
+    <div class="page-header" >
+        <div class="container">
+            <div class="row flash_msg">
+                <div class="col-12">
+                    {% for message in get_flashed_messages() %}
+                        <div class="alert alert-warning ">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <h1>Welcome to AMMIC</h1>
+                </div><!-- .col -->
+            </div><!-- .row -->
+        </div><!-- .container -->
+    </div><!-- .page-header -->
 
-{% block page_content %}
-    <div class="page-header">
-        <h1>Login</h1>
+    <div class="contact-page-wrap">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-7">
+                    <form class="loginform form-control"  method="post">
+                        <div class="form-group  required"><label class="control-label" for="email">Email</label>
+                            <input class="form-control" id="email" name="email" required type="text" value="">
+                        </div>
+                        <div class="form-group  required"><label class="control-label" for="password">Password</label>
+                            <input class="form-control" id="password" name="password" required type="password" value="">
+                        </div>
+                        <div class="checkbox">
+                          <label>
+                            <input id="remember_me" name="remember_me" type="checkbox" value="y"> Keep me logged in
+                          </label>
+                        </div>
+                        <input class="btn btn-primary" id="submit" name="submit" type="submit" value="Log In">
+                    </form>
+                </div>
+                <div class="col-12 col-lg-5">
+                    <div class="entry-content">
+                        <h2>关于我们</h2>
+
+                        <p>株式会社AMMIC是一家日本企业，成立于1992年，自成立起就专门从事生产管理软件(MRPII、ERP)的咨询、实施及软件开发工作，并拥有自己的ERP产品。在日本及中国、泰国等东南亚国家的日资企业已拥有上百家客户，遍及制药业、化工行业、化妆品业、食品业、电子行业、金属加工业等。 随着中国经济的不断发展，本公司在上海和北京开设了分支机构，以开拓国内市场并为客户提供最优的系统导入、人员教育、软件开发等服务并负责一定的日本方面的开发工作。</p>
+
+
+                        <ul class="contact-info p-0">
+                            <li><i class="fa fa-phone"></i><span>（021）5228-0577,0588转841</span></li>
+                            <li><i class="fa fa-envelope"></i><span>上海埃米柯信息系统有限公司</span></li>
+                            <li><i class="fa fa-map-marker"></i><span>上海市南京西路818号1312-1315室</span></li>
+                        </ul>
+                    </div>
+                </div><!-- .col -->
+
+
+            </div><!-- .row -->
+        </div><!-- .container -->
     </div>
-    <div class="col-md-4">
-        {{ wtf.quick_form(form) }}
-    <br>
-    <p>New User? <a href="{{ url_for('auth.register') }}">Click here to register</a></p>
-    </div>
-{% endblock %}
+
+    <footer class="site-footer">
+        <div class="footer-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="m-0">
+Copyright &copy;1999-<script>document.write(new Date().getFullYear());</script> All rights reserved | AMMIC 业务三课
+                    </div><!-- .col-12 -->
+                </div><!-- .row -->
+            </div><!-- .container -->
+        </div><!-- .footer-bar -->
+    </footer><!-- .site-footer -->
+</body>
+</html>

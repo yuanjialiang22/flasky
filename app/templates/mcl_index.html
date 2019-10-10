@@ -1,0 +1,62 @@
+{% extends 'base_mcl.html' %}
+{% import "_macros.html" as macros %}
+{% block titleblock %}
+    MCL - Home
+{% endblock %}
+
+{% block bodyblock %}
+<div class="container-fluid bg-light">
+    <div class="container" style="margin-top: 20px;">
+        <div class="row">
+        {% for liaisonf in liaisonfs %}
+        <div class="col-md-4">
+            <div class="card mb-4 box-shadow" style="{% if liaisonf.fstatus =="1" %}background-color:lightyellow;{% elif liaisonf.fstatus =="2" %}background-color: lightblue;{% elif liaisonf.fstatus=="3" %}background-color: lightpink;{% else %}background-color: darkgray;{% endif %} ">
+                <div class="card-body">
+                    <div class="col-lg-12 form-inline" style="padding-right: 2px">
+                        <div class="col-lg-11" style="padding: 0px">
+                            <h4><a href="{{ url_for('.mcl_modify_slipno', fslipno=liaisonf.fslipno ) }}">{{ liaisonf.fslipno }}</a></h4>
+                        </div>
+                        <div class="col-lg-1" style="text-align: right; padding: 0px">
+                            {% if liaisonf.fstatus == '1' %}
+                                <a class="icon-remove icon-large" style="padding: 0px; margin-right: 2px" href="{{ url_for('.mcl_delete', fid=liaisonf.fid) }}"></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <h6>Create Date：{{ liaisonf.fcreatedte.strftime("%Y-%m-%d") }}</h6>
+                    </div>
+                     <div class="col-lg-12 form-inline left_nopadding" >
+                         <div class="col-lg-6" style="text-align: left">
+                             <h6><span class="badge badge-light">{{ liaisonf.ftype }}</span></h6>
+                         </div>
+                        <div class="col-lg-6" style="text-align: right">
+                             <h6> <span class="badge {% if liaisonf.fstatus=='1'%}badge-info{% elif liaisonf.fstatus=='2' %}badge-primary{% elif liaisonf.fstatus=='3' %}badge-success{% else %}badge-dark{% endif %}">{% if liaisonf.fstatus=='1'%}未处理{% elif liaisonf.fstatus=='2' %}已开始{% elif liaisonf.fstatus=='3' %}已结束{% else %}已发布{% endif %}</span></h6>
+                         </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <h6 style="text-overflow:ellipsis;white-space:nowrap; overflow:hidden;">{{ liaisonf.fbrief }}</h6>
+                    </div>
+                    <div class="col-lg-12 form-inline left_nopadding">
+                        <div class="col-lg-5" >
+                            <h6>By <a href="{{ url_for('.mcl_index', name=liaisonf.fassignedto) }}" class="author"> {{ liaisonf.fassignedto }}</a></h6>
+                        </div>
+                        <div class="col-lg-7">
+                            <h6>Sir No：{% if liaisonf.fsirno %}{{ liaisonf.fsirno }}{% else %}********{% endif %}</h6>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 form-inline " >
+                </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+
+        {% if pagination %}
+            <div class="pagination footer" >
+                {% block paginationblock %}{{ macros.pagination_widget(pagination, '.mcl_index', name=user.name) }}{% endblock %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

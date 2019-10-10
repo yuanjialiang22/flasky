@@ -1,0 +1,72 @@
+{% extends "base_index.html" %}
+{% block titleblock %}
+    MCL - Report List
+{% endblock %}
+
+{% block bodyblock %}
+<div class="container">
+    <form class="m-4 form-horizontal" method="post">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-3" >
+                <select class="form-control" name="fprojectcd" id="fprojectcd">
+                    <option>{% if fprojectcd %}{{ fprojectcd }}{% endif %}</option>
+                    <option {% if fprojectcd %}{% else %}hidden{% endif %}></option>
+                    {% for project in projects %}
+                   <option>{{ project.fprojectcd }}</option>
+                   {% endfor %}
+               </select>
+            </div>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name = 'fodrno' id = 'fodrno' value="{% if fodrno %}{{ fodrno }}{% endif %}" placeholder="订单号">
+            </div>
+            <div class="col-sm-1" >
+                <button type="submit" name="search" value="notall" class="btn btn-primary">Search</button>
+            </div>
+            <div class="col-sm-1">
+                <button type="submit" name="search" value="all" class="btn btn-primary">Search All</button>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+    </form>
+
+    <table
+        id="table"
+        class="table-sm"
+        data-toggle="table"
+        data-search="true"
+        data-sortable="true">
+        <thead>
+            <tr>
+                <th data-width="10" data-width-unit="%" data-sortable="true">系统</th>
+                <th data-width="10" data-width-unit="%" data-sortable="true">制番</th>
+                <th data-width="15" data-width-unit="%" data-sortable="true">订单号</th>
+                <th data-width="25" data-width-unit="%" data-sortable="true">备注</th>
+                <th data-width="10" data-width-unit="%"></th>
+                <th data-width="10" data-width-unit="%"></th>
+                <th data-width="15" data-width-unit="%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for liaisonf in liaisonfs %}
+            <tr>
+                <td>{{ liaisonf[0]  }}</td>
+                <td>{{ liaisonf[1]  }}</td>
+                <td>{{ liaisonf[2]  }}</td>
+                <td>{{ liaisonf[3]  }}</td>
+                <td>
+                    <a href="{{ url_for('report.report_details', fodrno=liaisonf[2]) }}">订单明细</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('report.report_print', fodrno=liaisonf[2], type="N") }}">报表打印</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('report.report_print', fodrno=liaisonf[2], type="Y") }}">报表打印（贴图版)</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -213,6 +213,169 @@ class RegisterCheckOutFile(db.Model):
     # fsendemail = db.Column(db.String(1), default='N')
 
 
+class Feedback(db.Model):
+    __tablename__ ='feedback'
+    fid = db.Column(db.Integer, primary_key=True)
+    fcontent = db.Column(db.Text)
+    fstatus = db.Column(db.String(1))
+    fentdt = db.Column(db.DateTime)
+    fentusr = db.Column(db.String(24))
+    fupdtedt = db.Column(db.DateTime)
+    fupdteusr = db.Column(db.String(24))
+    fupdteprg = db.Column(db.String(110))
+
+
+class Updatelog(db.Model):
+    __tablename__ ='updatelog'
+    fid = db.Column(db.Integer, primary_key=True)
+    fcontent = db.Column(db.Text)
+    fversion = db.Column(db.String(10))
+    fentdt = db.Column(db.DateTime)
+    fentusr = db.Column(db.String(24))
+    fupdtedt = db.Column(db.DateTime)
+    fupdteusr = db.Column(db.String(24))
+    fupdteprg = db.Column(db.String(110))
+
+
+class Liaisonf(db.Model):
+    __tablename__='liaisonf'
+    fid = db.Column(db.Integer, primary_key=True)
+    fsystemcd = db.Column(db.String(20))
+    fprojectcd = db.Column(db.String(20))
+    fslipno = db.Column(db.String(20))
+    fsernum = db.Column(db.String(3))
+    ftype = db.Column(db.String(10))
+    fstatus = db.Column(db.String(15))
+    fodrno = db.Column(db.String(20))
+    fcreatedte = db.Column(db.DateTime)
+    fcreateusr = db.Column(db.String(24))
+    frequestor = db.Column(db.String(24))
+    fassignedto = db.Column(db.String(24))
+    fsubsystem = db.Column(db.String(100))
+    fbrief = db.Column(db.Text)
+    fcontent = db.Column(db.Text)
+    fanalyse = db.Column(db.Text)
+    fsolution = db.Column(db.Text)
+    fassignedt = db.Column(db.DateTime)
+    fplnstart = db.Column(db.DateTime)
+    fplnend = db.Column(db.DateTime)
+    factstart = db.Column(db.DateTime)
+    factend = db.Column(db.DateTime)
+    freleasedt = db.Column(db.DateTime)
+    fischarge = db.Column(db.String(1))
+    fentdt = db.Column(db.DateTime)
+    fentusr = db.Column(db.String(24))
+    fupdtedt = db.Column(db.DateTime)
+    fupdteusr = db.Column(db.String(24))
+    fupdteprg = db.Column(db.String(110))
+    freleaserpt = db.Column(db.Text)   #程序发布变更报告书
+    # fsirno = db.Column(db.String(10))  #for slms
+
+
+class Qahf(db.Model):
+    __tablename__='qahf'
+    fqahfid = db.Column(db.Integer, primary_key=True)
+    ftesttyp = db.Column(db.String(6))
+    fsystemcd = db.Column(db.String(20))
+    fprojectcd = db.Column(db.String(20))
+    fslipno = db.Column(db.String(20))
+    fobjectid = db.Column(db.String(50))
+    fobjectnm = db.Column(db.String(50))
+    fcreatedte = db.Column(db.DateTime)
+    fcreateusr = db.Column(db.String(24))
+    fstatus = db.Column(db.String(1))
+    fauditdte =db.Column(db.DateTime)
+    fauditor = db.Column(db.String(24))
+    ftestdte = db.Column(db.DateTime)
+    ftestusr = db.Column(db.String(24))
+    fconfirmdte = db.Column(db.DateTime)
+    fconfirmusr = db.Column(db.String(24))
+    fttlcodelines = db.Column(db.Numeric, default=0)
+    fmodifiedlines = db.Column(db.Numeric, default=0)    #2019.06.19 将这三个字段的默认值设置为 0
+    fcomplexity = db.Column(db.DECIMAL(10,1), default=0) #该字段应保留一位小数
+    fnote = db.Column(db.Text)
+    freviewcode = db.Column(db.Text)
+    fentdt = db.Column(db.DateTime)
+    fentusr = db.Column(db.String(24))
+    fupdtedt = db.Column(db.DateTime)
+    fupdteusr = db.Column(db.String(24))
+    fupdteprg = db.Column(db.String(110))
+    # fobjmodification = db.Column(db.Text)   #2019.7.31 MCL对象修改详情
+
+
+class Qadf(db.Model):
+    __tablename = 'qadf'
+    fqadfid = db.Column(db.Integer, primary_key=True)
+    fclass1 = db.Column(db.String(20))
+    fclass2 = db.Column(db.String(20))
+    ftag = db.Column(db.Text)
+    fregression = db.Column(db.String(1))
+    fcontent_text = db.Column(db.Text)
+    fcontent= db.Column(db.Text)
+    ftestdte= db.Column(db.DateTime)
+    ftestusr = db.Column(db.String(24))
+    fimpdte = db.Column(db.DateTime)
+    fimpusr = db.Column(db.String(24)) #fimpdte、fimpusr为测试用例的添加时间和添加者（2019-05-13）
+    fisplan = db.Column(db.String(1))
+    fapproval = db.Column(db.String(1))
+    fresult = db.Column(db.String(10))
+    fnote = db.Column(db.Text)
+    fsuggestion = db.Column(db.Text)
+    fdtlobj = db.Column(db.Text)
+    fattachment = db.Column(db.Text)
+    fentdt = db.Column(db.DateTime)
+    fentusr = db.Column(db.String(24))
+    fupdtedt = db.Column(db.DateTime)
+    fupdteusr = db.Column(db.String(24))
+    fupdteprg = db.Column(db.String(110))
+    fqahfid = db.Column(db.Integer, db.ForeignKey('qahf.fqahfid'))
+    fngcnt = db.Column(db.Integer, default=0)   #该字段用来记录当前测试case总共NG多少次
+    flastapproveid = db.Column(db.Integer, default=0)  #该字段为确认NG后，对应Qadfproof的ID
+    flastsubmitid = db.Column(db.Integer, default=0)   #该字段为提交后，对应Qadfproof的ID
+
+
+class Qadfproof(db.Model):
+    __tablename__ = 'qadfproof'
+    fqadfproofid = db.Column(db.Integer, primary_key=True)
+    fcontent_text = db.Column(db.Text)
+    forifilename = db.Column(db.String(50))  #2019/08/16 add 用来保存上传的测试文档的原始名称，下载时用
+    fentdt = db.Column(db.DateTime)
+    fentusr = db.Column(db.String(24))
+    fqadfid = db.Column(db.Integer, db.ForeignKey('qadf.fqadfid'))
+
+
+class Systemm(db.Model):
+    __tablename__='systemm'
+    fsystemcd = db.Column(db.String(20), primary_key=True)
+    fsystemnm = db.Column(db.String(50))
+    fentdt = db.Column(db.DateTime)
+    fentusr = db.Column(db.String(24))
+    fupdtedt = db.Column(db.DateTime)
+    fupdteusr = db.Column(db.String(24))
+    fupdteprg = db.Column(db.String(110))
+
+
+class Projectm(db.Model):
+    __tablename__='projectm'
+    fprojectcd = db.Column(db.String(20), primary_key=True)
+    fprojectnm = db.Column(db.String(50))
+    fentdt = db.Column(db.DateTime)
+    fentusr = db.Column(db.String(24))
+    fupdtedt = db.Column(db.DateTime)
+    fupdteusr = db.Column(db.String(24))
+    fupdteprg = db.Column(db.String(110))
+    # fprojectsn = db.Column(db.String(10))
+    # fautoflg = db.Column(db.String(1))
+
+
+class Recipients(db.Model):
+    __tablename__='recipients'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(64))
+    name = db.Column(db.String(64))
+    applicant_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
 login_manager.anonymous_user = AnonymousUser
 
 

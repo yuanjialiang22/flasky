@@ -1,37 +1,148 @@
-{% extends "base.html" %}
 {% import "_macros.html" as macros %}
+{% extends "base.html" %}
 
-{% block title %}Flasky - {{ user.username }}{% endblock %}
+{% block titleblock %}
+    AMMIC - Profile
+{% endblock %}
 
-{% block page_content %}
-<div class="page-header">
-    <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}">
-    <div class="profile-header">
-        <h1>{{ user.username }}</h1>
-        {% if user.name or user.location %}
-        <p>
-            {% if user.name %}{{ user.name }}<br>{% endif %}
-            {% if user.location %}
-                from <a href="http://maps.baidu.com/?q={{ user.location }}">{{ user.location }}</a><br>
-            {% endif %}
-        </p>
-        {% endif %}
-        {% if current_user.is_administrator() %}
-        <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
-        {% endif %}
-        {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-        <p>Member since {{ moment(user.member_since).format('L') }}. Last seen {{ moment(user.last_seen).fromNow() }}.</p>
-{#        <p>{{ user.posts.count() }} blog posts.</p>#}
-        <p>
+{% block bodyblock %}
+    {% if current_user.is_authenticated %}
+    <div class="row">
+        <div class="col-sm-2 text-center" style="margin-top: 5rem !important">
+            <h1 style="font-family: happyzcool-2016regular">{{ user.name }}</h1>
             {% if user == current_user %}
-            <a class="btn btn-default" href="{{ url_for('.edit_profile') }}">Edit Profile</a>
+            <div class="navbar bg-light">
+                <ul class="navbar-nav text-left">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('.recipients', username=user.username) }}">Edit Recipients</a>
+                    </li>
+                </ul>
+
+            </div>
             {% endif %}
-            {% if current_user.is_administrator() %}
-            <a class="btn btn-danger" href="{{ url_for('.edit_profile_admin', id=user.id) }}">Edit Profile [Admin]</a>
-            {% endif %}
-        </p>
+        </div>
+        <div class="col-sm-10">
+            <form class="m-4 form-horizontal" method="post">
+            <div class="row">
+                <div class="col-sm-2" >
+                    <select class="form-control" name="fsystem" id="fsystem"  placeholder="系统">
+                         <option >{% if fsystem %}{{ fsystem }}{% else %}{% endif %}</option>
+                         <option >OMS</option>
+                         <option >OMR</option>
+                         <option >OMZ</option>
+                         <option >OMB</option>
+                         <option >OMI</option>
+                         <option >OMIIAB</option>
+                         <option >GCS</option>
+                    </select>
+                </div>
+                <div class="col-sm-2" >
+                    <input type="text" class="form-control" name = 'fcomment' id = 'fcomment' value="{% if fcomment %}{{ fcomment }}{% endif %}" placeholder="源路径">
+                </div>
+                <div class="col-sm-3" >
+                    <input type="text" class="form-control" name = 'fslipno' id = 'fslipno' value="{% if fslipno %}{{ fslipno }}{% endif %}" placeholder="联络票号">
+                </div>
+                <div class="col-sm-3" >
+                    <input type="text" class="form-control" name = 'fchkoutobj' id = 'fchkoutobj' placeholder="迁出文件">
+                </div>
+                <div class="col-sm-2" >
+                    <button type="submit" class="btn btn-primary">发布</button>
+                </div>
+            </div>
+            </form>
+
+            <div >
+                <table
+                    id="table"
+                    class="table-sm"
+                    data-toggle="table"
+                    data-search="true"
+                    data-sortable="true"
+                    data-show-columns="true">
+                    <thead>
+                        <tr>
+                            <th data-width="5" data-width-unit="%" data-sortable="true">系统</th>
+                            <th data-width="9" data-width-unit="%">备注</th>
+                            <th data-width="15" data-width-unit="%" data-sortable="true">联络票号</th>
+                            <th data-width="15" data-width-unit="%">文件名称</th>
+                            <th data-width="15" data-width-unit="%" data-sortable="true">PBL名称</th>
+                            <th data-width="7" data-width-unit="%" data-sortable="true">申请日期</th>
+                            <th data-width="7" data-width-unit="%" data-sortable="true">迁出日期</th>
+                            <th data-width="5" data-width-unit="%">迁出者</th>
+                            <th data-width="7" data-width-unit="%" data-sortable="true">迁入日期</th>
+                            <th data-width="5" data-width-unit="%">迁入者</th>
+                            <th data-width="9" data-width-unit="%" data-sortable="true">状态</th>
+                            <th data-width="3" data-width-unit="%"></th>
+                            <th data-width="4" data-width-unit="%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for checkout in checkouts %}
+                        <tr>
+                            <td><a href="{{ url_for('.system', system=checkout.fsystem) }}">{{ checkout.fsystem }}</a></td>
+                            <td><a>{{ checkout.fcomment }}</a></td>
+                            <td><a href="{{ url_for('.fslipno', fslipno=checkout.fslipno) }}">{{ checkout.fslipno }}</a></td>
+                            <td><a href="{{ url_for('.file', fchkoutobj=checkout.fchkoutobj) }}">{{ checkout.fchkoutobj }}</a></td>
+                            <td>{{ checkout.fchkoutfile}}</td>
+                            <td>{% if checkout.fregisterdte %}{{ checkout.fregisterdte.strftime("%Y-%m-%d") }}{% else %}{{ '' }}{% endif %}</td>
+                            <td>{% if checkout.fchkoutdte %}{{ checkout.fchkoutdte.strftime("%Y-%m-%d") }}{% else %}{{ '' }}{% endif %}</td>
+                            <td>{% if checkout.fchkoutperson %}{{ checkout.fchkoutperson }}{% else %}{{ '' }}{% endif %}</td>
+                            <td>{% if checkout.fchkindte %}{{ checkout.fchkindte.strftime("%Y-%m-%d") }}{% else %}{{ '' }}{% endif %}</td>
+                            <td>{% if checkout.fchkinperson %}{{ checkout.fchkinperson }}{% else %}{{ '' }}{% endif %}</td>
+                            <td><a href="{{ url_for('.status', fchkstatus=checkout.fchkstatus) }}">{{ checkout.fchkstatus }}</a></td>
+                            <td><a href="{{ url_for('.edit_status', id = checkout.id) }}">{% if current_user.is_administrator() %}Edit{% endif %}</a></td>
+                            <td><a href="{{ url_for('.user_delete', id = checkout.id) }}">{% if checkout.fchkstatus=='1-ASK' %}Delete{% endif %}</a></td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% if pagination %}
+        <div class="pagination footer" style="margin-top: 5px">
+            {% block paginationblock %}{{ macros.pagination_widget(pagination, '.user', username=user.username) }}{% endblock %}
+        </div>
+        {% endif %}
+        </div>
     </div>
-</div>
+
+    {% endif %}
+{% endblock %}
+
+{#{% extends "base.html" %}#}
+{#{% import "_macros.html" as macros %}#}
+{##}
+{#{% block title %}Flasky - {{ user.username }}{% endblock %}#}
+{##}
+{#{% block page_content %}#}
+{#<div class="page-header">#}
+{#    <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}">#}
+{#    <div class="profile-header">#}
+{#        <h1>{{ user.username }}</h1>#}
+{#        {% if user.name or user.location %}#}
+{#        <p>#}
+{#            {% if user.name %}{{ user.name }}<br>{% endif %}#}
+{#            {% if user.location %}#}
+{#                from <a href="http://maps.baidu.com/?q={{ user.location }}">{{ user.location }}</a><br>#}
+{#            {% endif %}#}
+{#        </p>#}
+{#        {% endif %}#}
+{#        {% if current_user.is_administrator() %}#}
+{#        <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>#}
+{#        {% endif %}#}
+{#        {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}#}
+{#        <p>Member since {{ moment(user.member_since).format('L') }}. Last seen {{ moment(user.last_seen).fromNow() }}.</p>#}
+{#        <p>{{ user.posts.count() }} blog posts.</p>#}
+{#        <p>#}
+{#            {% if user == current_user %}#}
+{#            <a class="btn btn-default" href="{{ url_for('.edit_profile') }}">Edit Profile</a>#}
+{#            {% endif %}#}
+{#            {% if current_user.is_administrator() %}#}
+{#            <a class="btn btn-danger" href="{{ url_for('.edit_profile_admin', id=user.id) }}">Edit Profile [Admin]</a>#}
+{#            {% endif %}#}
+{#        </p>#}
+{#    </div>#}
+{#</div>#}
 {#<h3>Posts by {{ user.username }}</h3>#}
 {#{% include '_posts.html' %}#}
 {#{% if pagination %}#}
@@ -39,4 +150,4 @@
 {#    {{ macros.pagination_widget(pagination, '.user', username=user.username) }}#}
 {#</div>#}
 {#{% endif %}#}
-{% endblock %}
+{#{% endblock %}#}
