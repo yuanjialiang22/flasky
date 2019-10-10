@@ -1,61 +1,72 @@
-{% extends "bootstrap/base.html" %}
-{% block title %}Flask{% endblock %}
+<!DOCTYPE html>
+<html>
+<link>
+    <title>{% block titleblock %}{{title|default}}{% endblock titleblock %}</title>
 
-{% block head %}
-    {{ super() }}
-    <link rel="shortcut icon" href="{{ url_for('static', filename='static/ammic.ico') }}" type="image/x-icon">
-    <link rel="icon" href="{{ url_for('static', filename='static/ammic.ico') }}" type="image/x-icon">
-{% endblock %}
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" type="text/css" rel="stylesheet">
+    <script src="{{ url_for('static',filename='js/jquery-3.3.1.min.js') }}" type="text/javascript" rel="script"></script>
+    <script src="{{ url_for('static',filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/holder.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.bundle.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.js') }}" type="text/javascript" rel="script"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap-table.css') }}" type="text/css" rel="stylesheet">
+    <script src="{{ url_for('static',filename='js/bootstrap-table.js') }}" type="text/javascript" rel="script"></script>
 
-{% block navbar %}
-    <div class="navbar navbar-inverse" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">Flasky</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="/">Home</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='AMMICLOG.BMP') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='AMMICLOG.BMP') }}" type="image/x-icon">
+    <link href="{{ url_for('static', filename='css/stylesheet.css') }}" type="text/css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+            <a class="navbar-brand disabled" style="color: white; padding: 0px;"><img src="{{ url_for('static', filename='ammic.ico') }}" style="height: 40px;width: 40px; padding: 0px"/></a>
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+                <ul class="nav navbar-nav" >
                     {% if current_user.is_authenticated %}
-                        <li>
-                            <a href="{{ url_for('auth.logout') }}">Log Out</a>
-                        </li>
-                        <li>
-                            <a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.file_search') }}">Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.send_email') }}">Send Email</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href=""id="navbardrop" data-toggle="dropdown">{{ current_user.name }}</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ url_for("auth.personal", username=current_user.username) }}">个人主页</a>
+                            <a class="dropdown-item" href="{{ url_for('auth.logout') }}">退出</a>
+                        </div>
+                    </li>
                     {% else %}
-                        <li>
-                            <a href="{{ url_for('auth.login') }}">Log In</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">登入</a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
+        </nav>
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% block bodyblock %}
+        {% endblock %}
+        <div class="footer" style="margin-bottom:0">
+        {% block footerblock %}
+        {% endblock %}
         </div>
     </div>
-{% endblock %}
+</body>
 
-{% block content %}
-    <div class="container">
-        {% for message in get_flashed_messages() %}
-            <div class="alert alert-warning">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                {{ message }}
-            </div>
-        {% endfor %}
-        {% block page_content %}{% endblock %}
-    </div>
-{% endblock %}
+</html>
 
-{% block scripts %}
-    {{ super() }}
-    {{ moment.include_moment() }}
-    {{ moment.locale('cn') }}
-{% endblock %}
+

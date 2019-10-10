@@ -10,16 +10,28 @@ from ..email import send_email
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():           # validate_on_submit()验证表单数据
-        user = User.query.filter_by(email=form.email.data).first()
-        if user is not None and user.verify_password(form.password.data):   # verify_password()其参数是表单中填写的密码
-            login_user(user, form.remember_me.data)     # login_user()在用户会话中把用户标记为已登录
-            next = request.args.get('next')             # 是否记住我，Flask-Login会把原URL 保存在查询字符串的next 参数中
+    if request.method == 'POST':
+        user = User.query.filter_by(email=request.values.get('email')).first()
+        if user is not None and user.verify_password(request.values.get('password')):   # verify_password()其参数是表单中填写的密码
+            login_user(user, request.values.getlist('remember_me'))     # login_user()在用户会话中把用户标记为已登录
+            next = request.args.get('next')                             # 是否记住我，Flask-Login会把原URL 保存在查询字符串的next 参数中
             if next is None or not next.startswith('/'):
                 next = url_for('main.index')
             return redirect(next)
-        flash('Invalid username or password.')
+        flash('Invalid username or password.', 'error')
     return render_template('auth/login.html', form=form)
+
+    # form = LoginForm()
+    # if form.validate_on_submit():           # validate_on_submit()验证表单数据
+    #     user = User.query.filter_by(email=form.email.data).first()
+    #     if user is not None and user.verify_password(form.password.data):   # verify_password()其参数是表单中填写的密码
+    #         login_user(user, form.remember_me.data)     # login_user()在用户会话中把用户标记为已登录
+    #         next = request.args.get('next')             # 是否记住我，Flask-Login会把原URL 保存在查询字符串的next 参数中
+    #         if next is None or not next.startswith('/'):
+    #             next = url_for('main.index')
+    #         return redirect(next)
+    #     flash('Invalid username or password.')
+    # return render_template('auth/login.html', form=form)
 
 
 @auth.route('/logout')
