@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block titleblock %}{{title|default}}{% endblock titleblock %}</title>
+
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" type="text/css" rel="stylesheet">
+    <script src="{{ url_for('static',filename='js/jquery-3.3.1.min.js') }}" type="text/javascript" rel="script"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.js') }}" type="text/javascript" rel="script"></script>
+
+    <script src="{{ url_for('static',filename='js/popper.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap-table.css') }}" type="text/css" rel="stylesheet">
+    <script src="{{ url_for('static',filename='js/bootstrap-table.js') }}" type="text/javascript" rel="script"></script>
+    <script src="{{ url_for('static',filename='js/holder.min.js') }}"></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='AMMICLOG.BMP') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='AMMICLOG.BMP') }}" type="image/x-icon">
+    <link href="{{ url_for('static', filename='css/stylesheet.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='awesome/css/font-awesome.min.css') }}" type="text/css" rel="stylesheet">
+    <script src="{{ url_for('static',filename='js/jsPdf.debug.js') }}" type="text/javascript" rel="script"></script>
+    <script src="{{ url_for('static',filename='js/html2canvas.js') }}" type="text/javascript" rel="script"></script>
+
+    <script type="text/javascript">
+        function downPdf() {
+            var element = $("#demo");    // 这个dom元素是要导出pdf的div容器
+            var w = element.width();    // 获得该容器的宽
+            var h = element.height();    // 获得该容器的高
+            var offsetTop = element.offset().top;    // 获得该容器到文档顶部的距离
+            var offsetLeft = element.offset().left;    // 获得该容器到文档最左的距离
+            var canvas = document.createElement("canvas");
+            var abs = 0;
+            var win_i = $(window).width();    // 获得当前可视窗口的宽度（不包含滚动条）
+            var win_o = window.innerWidth;    // 获得当前窗口的宽度（包含滚动条）
+            if(win_o>win_i){
+                abs = (win_o - win_i)/2;    // 获得滚动条长度的一半
+            }
+            canvas.width = w * 2;    // 将画布宽&&高放大两倍
+            canvas.height = h * 2;
+            {#canvas.dpi = 300#}
+            var context = canvas.getContext("2d");
+            context.scale(2, 2);
+            context.dpi=window.devicePixelRatio * 2,
+            context.scale = 2,
+            context.useCORS=true,
+            context.translate(-offsetLeft-abs,-offsetTop);
+            // 这里默认横向没有滚动条的情况，因为offset.left(),有无滚动条的时候存在差值，因此
+            // translate的时候，要把这个差值去掉
+
+            html2canvas(element, {
+                onrendered:function(canvas) {
+                  var contentWidth = canvas.width;
+                  var contentHeight = canvas.height;
+                  //一页pdf显示html页面生成的canvas高度;
+                  var pageHeight = contentWidth / 595.28 * 841.89;
+                  //未生成pdf的html页面高度
+                  var leftHeight = contentHeight;
+                  //pdf页面偏移
+                  var position = 0;
+                  //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
+                  var imgWidth = 555.28;
+                  var imgHeight = 555.28/contentWidth * contentHeight;
+
+                  var pageData = canvas.toDataURL('', 1.0);
+
+                  var pdf = new jsPDF('', 'pt', 'a4');
+                  //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
+                  //当内容未超过pdf一页显示的范围，无需分页
+                  if (leftHeight < pageHeight) {
+                      pdf.addImage(pageData, 'JPEG', 20, 0, imgWidth, imgHeight );
+                  } else {
+                      while(leftHeight > 0) {
+                          pdf.addImage(pageData, 'JPEG', 20, position, imgWidth, imgHeight)
+                          leftHeight -= pageHeight;
+                          position -= 841.89;
+                          //避免添加空白页
+                          if(leftHeight > 0) {
+                              pdf.addPage();
+                          }
+                      }
+                  }
+                  pdf.save('content.pdf');
+              }
+            })
+      }
+    </script>
+
+</head>
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-md  bg-dark navbar-dark">
+        <a class="navbar-brand disabled" style="color: white; padding: 0px;"><img src="{{ url_for('static', filename='ammic.ico') }}" style="height: 40px;width: 40px; padding: 0px"/></a>
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">Home</a>
+        <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+            <ul class="nav navbar-nav" >
+                {% if current_user.is_administrator() %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href=""id="navbardrop" data-toggle="dropdown">User Rights</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ url_for('auth.register') }}">Register</a>
+                        <a class="dropdown-item" href="{{ url_for('main.user_rights') }}">User Rights</a>
+                        <a class="dropdown-item" href="{{ url_for('auth.reset_password') }}">Reset Password</a>
+                    </div>
+                </li>
+                {% endif %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href=""id="navbardrop" data-toggle="dropdown">About</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ url_for('main.feedback') }}">Feedback</a>
+                        <a class="dropdown-item" href="{{ url_for('main.updatelog') }}">Update log</a>
+                        <a class="dropdown-item" href="{{ url_for('main.about') }}">About System</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href=""id="navbardrop" data-toggle="dropdown">{{ current_user.name }}</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ url_for("auth.personal", username=current_user.username) }}">个人主页</a>
+                        <a class="dropdown-item" href="{{ url_for('auth.logout') }}">退出</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+        {% endfor %}
+
+        {% block bodyblock %}
+        {% endblock %}
+
+</div>
+</body>
+</html>

@@ -1,0 +1,142 @@
+.single-page .page-header {
+    position: relative;
+    z-index: 99;
+    height: 500px;
+    padding-top: 100px;
+    padding-bottom: 72px;
+    background-size: cover !important;
+}
+
+.flash_msg {
+    position: relative;
+    z-index: 999;
+    height: 80px;
+    padding-top: 0px;
+    background-size: cover !important;
+}
+
+.single-page .page-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+}
+
+.single-page .page-header h1 {
+    position: relative;
+    padding-bottom: 24px;
+    font-size: 36px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.single-page .page-header h1::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 64px;
+    height: 4px;
+    border-radius: 2px;
+    background: #ff5a00;
+}
+
+
+@media screen and (max-width: 992px){
+    .about-page .welcome-content .entry-title {
+        margin-top: 60px;
+    }
+}
+
+/*--------------------------------------------------------------
+# Contact Page
+--------------------------------------------------------------*/
+.contact-page .page-header {
+    background: url(../images/welcome.jpg) no-repeat center;
+    height: 330px;
+}
+
+.contact-page-wrap {
+    padding: 0 0 96px;
+}
+
+.contact-page-wrap .entry-content {
+    margin-top: 96px;
+}
+
+.contact-page-wrap .entry-content h2 {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.contact-page-wrap .entry-content p {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #929191;
+}
+
+.contact-page-wrap .entry-content ul.contact-social {
+    padding: 20px 0 0;
+    margin: 0;
+    list-style: none;
+}
+
+.contact-page-wrap .entry-content ul.contact-social li {
+    margin-right: 28px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.contact-page-wrap .entry-content ul.contact-social li a {
+    color: #ff3700;
+}
+
+.contact-page-wrap .entry-content ul.contact-info {
+    margin: 32px 0 0;
+}
+
+.contact-page-wrap .entry-content ul.contact-info li {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #9b9a9a;
+}
+
+.contact-page-wrap .entry-content ul.contact-info .fa {
+    width: 28px;
+    margin-right: 10px;
+    font-size: 18px;
+    color: #ff5a00;
+    text-align: center;
+}
+
+.loginform {
+    padding: 35px 20px 55px;
+    margin-top: 96px;
+}
+
+
+.contact-page .contact-gmap {
+    margin-top: 92px;
+}
+
+.contact-page .contact-gmap iframe {
+    display: block;
+    width: 100%;
+    height: 440px;
+}
+
+/*--------------------------------------------------------------
+# Footer
+--------------------------------------------------------------*/
+.footer-bar {
+    padding: 30px 0;
+    font-size: 16px;
+    color: #7b7b7b;
+    background: #131212;
+    text-align: center;
+}
