@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block titleblock %}
+{% endblock %}
+
+{% block bodyblock %}
+    <div >
+        <table
+            id="table"
+            class="table-sm"
+            data-toggle="table"
+            data-search="true"
+            data-sortable="true"
+            data-pagination="true"
+            data-page-size="20"
+            data-show-columns="true">
+            <thead>
+                <tr>
+                    <th data-width="5" data-width-unit="%" data-sortable="true">申请者</th>
+                    <th data-width="7" data-width-unit="%" data-sortable="true">申请日期</th>
+                    <th data-width="5" data-width-unit="%" data-sortable="true">系统</th>
+                    <th data-width="9" data-width-unit="%">备注</th>
+                    <th data-width="10" data-width-unit="%" data-sortable="true">联络票号</th>
+                    <th data-width="15" data-width-unit="%">文件名称</th>
+                    <th data-width="15" data-width-unit="%" data-sortable="true">PBL名称</th>
+                    <th data-width="7" data-width-unit="%" data-sortable="true">迁出日期</th>
+                    <th data-width="5" data-width-unit="%">迁出者</th>
+                    <th data-width="7" data-width-unit="%" data-sortable="true">迁入日期</th>
+                    <th data-width="5" data-width-unit="%">迁入者</th>
+                    <th data-width="9" data-width-unit="%" data-sortable="true">状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for checkout in checkouts %}
+                <tr>
+                    <td>{{ checkout.applicant.name }}</td>
+                    <td>{% if checkout.fregisterdte %}{{ checkout.fregisterdte.strftime("%Y-%m-%d") }}{% else %}{{ '' }}{% endif %}</td>
+                    <td>{{ checkout.fsystem }}</td>
+                    <td>{{ checkout.fcomment }}</td>
+                    <td>{{ checkout.fslipno }}</td>
+                    <td>{{ checkout.fchkoutobj }}</td>
+                    <td>{{ checkout.fchkoutfile}}</td>
+                    <td>{% if checkout.fchkoutdte %}{{ checkout.fchkoutdte.strftime("%Y-%m-%d") }}{% else %}{{ '' }}{% endif %}</td>
+                    <td>{% if checkout.fchkoutperson %}{{ checkout.fchkoutperson }}{% else %}{{ '' }}{% endif %}</td>
+                    <td>{% if checkout.fchkindte %}{{ checkout.fchkindte.strftime("%Y-%m-%d") }}{% else %}{{ '' }}{% endif %}</td>
+                    <td>{% if checkout.fchkinperson %}{{ checkout.fchkinperson }}{% else %}{{ '' }}{% endif %}</td>
+                    <td>{{ checkout.fchkstatus }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+

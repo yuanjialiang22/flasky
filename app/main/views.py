@@ -10,13 +10,13 @@ from ..decorators import admin_required, Permission
 from datetime import date,datetime
 
 
-@main.route('/')
+@main.route('/')                        # 首页
 @login_required
 def index():
     return render_template('index.html')
 
 
-@main.route('user/<username>')          # 资料页面的路由
+@main.route('user/<username>', methods=['GET', 'POST'])          # 首页 - 程序管理 - 进入
 def user(username):
     # user = User.query.filter_by(username=username).first_or_404()       # 如果传入路由的用户名不存在，则返回404 错误
     # return render_template('user.html', user=user)
